@@ -9,6 +9,7 @@ import router from './router'
 // 引入初始化的样式
 import '@/styles/common.scss'
 
+import { lazyPlugin  } from '@/directives/index.js'
 //测试接口函数
 import { getCategory } from "@/apis/testAPI"
 getCategory().then(res =>{
@@ -18,5 +19,5 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-
+app.use(lazyPlugin)
 app.mount('#app')
