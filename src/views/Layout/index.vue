@@ -16,7 +16,11 @@ onMounted(() => categoryStore.getCategory())
   <LayoutFixed />
   <LayoutNav />
   <LayoutHeader />
-  <RouterView />
+  <!-- 方案一 -->
+  <!-- 添加一个key,破坏复用机制，强制销毁重建 -->
+  <!-- <RouterView> 是 Vue Router 内置组件（路由出口） -->
+  <!-- <RouterView :key="$route.fullPath"/> -->
+  <RouterView/>
   <LayoutFooter />
 </template>
 

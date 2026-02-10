@@ -1,29 +1,9 @@
 <script setup>
-import { getCategoryAPI } from "@/apis/category.js"
-import { ref,onMounted,watch } from 'vue'
-import { useRoute } from 'vue-router'
-// 导入 VueRouter 的 useRoute 函数，
-// 作用是获取当前页面的路由信息（比如路由地址、路由参数 id 等）
-
-//后端给了数字(category.js) → 前端循环渲染成链接(RouterLink) → 路由配置识别并接收数字(index.js) → 组件拿到数字请求数据
-const categoryData = ref({})
-const route = useRoute()
-const getCategory = async() => {
-  const res = await getCategoryAPI(route.params.id)
-  categoryData.value = res.result
-}
-onMounted(()=>getCategory())
-
-// 2. 新增：监听路由参数id的变化，变化时重新请求数据
-watch(
-  () => route.params.id, // 监听的目标：路由参数id
-  (newId) => { // newId是变化后的新id
-    if (newId) { // 确保id存在时再请求
-      getCategory()
-    }
-  },
-  { immediate: true } // 可选：立即执行（和onMounted效果重复，可二选一）
-)
+import GoodsItem from '../Home/components/GoodsItem.vue'
+import { useBanner } from "./composables/useBanner"
+const { bannerList } = useBanner()
+import { useCategory } from "./composables/useCategory"
+const { categoryData } = useCategory()
 </script>
 
 <template>
@@ -36,6 +16,33 @@ watch(
           <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <!-- 轮播图 -->
+      <div class="home-banner">
+        <el-carousel height="500px">
+          <el-carousel-item v-for="item in bannerList" :key="item.id">
+            <img :src="item.imgUrl" alt="">
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div class="sub-list">
+      <h3>全部分类</h3>
+      <ul>
+        <li v-for="i in categoryData.children" :key="i.id">
+          <RouterLink :to="`/category/sub/${i.id}`">
+            <img :src="i.picture" />
+            <p>{{ i.name }}</p>
+          </RouterLink>
+        </li>
+      </ul>
+    </div>
+    <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+      <div class="head">
+        <h3>- {{ item.name }}-</h3>
+      </div>
+      <div class="body">
+        <GoodsItem v-for="good in item.goods" :goods="good" :key="good.id" />
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -117,6 +124,17 @@ watch(
 
   .bread-container {
     padding: 25px 0;
+  }
+}
+.home-banner {
+  width: 1240px;
+  height: 500px;
+  z-index: 98;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: 500px;
   }
 }
 </style>
