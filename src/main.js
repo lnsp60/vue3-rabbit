@@ -13,7 +13,7 @@ import { lazyPlugin  } from '@/directives/index.js'
 //测试接口函数
 import { getCategory } from "@/apis/testAPI"
 getCategory().then(res =>{
-  console.log(res)
+  // console.log(res)
 })
 const app = createApp(App)
 

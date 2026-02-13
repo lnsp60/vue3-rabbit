@@ -9,7 +9,7 @@ export const lazyPlugin = {
           el,//指令绑定的那个元素 img
           ([{isIntersecting}]) => {
             //是否进入视口
-            console.log(isIntersecting)
+            // console.log(isIntersecting)
             if(isIntersecting){
               el.src = binding.value
               stop()
